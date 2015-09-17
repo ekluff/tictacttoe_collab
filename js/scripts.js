@@ -68,35 +68,89 @@ Game.prototype.winner = function() {
     var yChecker1 = this.player1.yCoords.toString().split(",").join("");
     var yChecker2 = this.player2.yCoords.toString().split(",").join("");
     var spaceChecker1 = this.player1.spaces;
-    var spaceChecker2 = this.player2.spaces;
+    var spaceChecker2 = this.player1.spaces;
     var allSpaces = spaceChecker1.concat(spaceChecker2);
 
     if ((/1{3}|2{3}|3{3}/).exec(xChecker1) >= 3) {
-        return this.player1;
+        return true;
         // checks to see if there are 3 vertical spaces marked by one player
     } else if ((/1{3}|2{3}|3{3}/).exec(xChecker2) >= 3) {
-        return this.player2;
+        return true;
     } else if ((/1{3}|2{3}|3{3}/).exec(yChecker1) >= 3) {
-        return this.player1;
+        return true;
         // checks to see if there are 3 horizontal spaces marked by one player
     } else if ((/1{3}|2{3}|3{3}/).exec(yChecker2) >= 3) {
-        return this.player2;
+        return true;
     } else if ((spaceChecker1.indexOf(this.board.space11) !== -1) && (spaceChecker1.indexOf(this.board.space22) !== -1) && (spaceChecker1.indexOf(this.board.space33) !== -1)) {
-        return this.player1;
+        return true;
         // checks to see if there are 3 diagonal spaces marked by one player
     } else if ((spaceChecker2.indexOf(this.board.space11) !== -1) && (spaceChecker2.indexOf(this.board.space22) !== -1) && (spaceChecker2.indexOf(this.board.space33) !== -1)) {
-        return this.player2;
+        return true;
     } else if ((spaceChecker1.indexOf(this.board.space13) !== -1) && (spaceChecker1.indexOf(this.board.space22) !== -1) && (spaceChecker1.indexOf(this.board.space31) !== -1)) {
-        return this.player1;
+        return true;
     } else if ((spaceChecker2.indexOf(this.board.space13) !== -1) && (spaceChecker2.indexOf(this.board.space22) !== -1) && (spaceChecker2.indexOf(this.board.space31) !== -1)) {
-        return this.player2;
-    } else if (allSpaces.length === 9) {
-        return false;
-        // checks to see if all spaces have been marked
+        return true;
+    // } else if (allSpaces.length === 9) {
+    //     return false;
+    //         // checks to see if all spaces have been marked
     } else {
-        return null;
-    }
-}
+        return false;
+    };
+
+};
+
+Game.prototype.checkTie = function(totalTurns){
+    var turn = this.turn;
+    var player1 = this.player1;
+    var player2 = this.player2;
+    var winSpaces = [
+        [this.board.space11,this.board.space12,this.board.space13],
+        [this.board.space21,this.board.space22,this.board.space23],
+        [this.board.space31,this.board.space32,this.board.space33],
+        [this.board.space11,this.board.space22,this.board.space33],
+        [this.board.space12,this.board.space22,this.board.space32],
+        [this.board.space13,this.board.space23,this.board.space33],
+        [this.board.space11,this.board.space22,this.board.space33],
+        [this.board.space13,this.board.space22,this.board.space31]
+    ];
+
+    var result = winSpaces.every(function(winSpace) {
+        var empties = 0;
+        var player1Spaces = 0;
+        var player2Spaces = 0;
+
+        for (var i = 0; i<winSpace.length; i++) {
+            var spaceMark = winSpace[i].player;
+
+            if (spaceMark === undefined) {
+                empties += 1;
+            } else if (spaceMark === player1) {
+                player1Spaces += 1;
+            } else if (spaceMark === player2) {
+                player2Spaces += 1;
+            } else {
+                console.log('spaceMark for loop ' + [i] + ' does not match players or undefined');
+            };
+        };
+
+        if (empties === 1 && player1Spaces === 1) {
+            return true;
+        } else if (empties === 1 && player2Spaces === 1) {
+            return true;
+        } else if (player2Spaces === 2 && player1Spaces === 1) {
+            return true;
+        } else if (player2Spaces === 1 && player1Spaces === 2) {
+            return true;
+        } else if (totalTurns === 8 && player2Spaces === 2 && turn === player1) {
+            return true;
+        } else if (totalTurns === 8 && player1Spaces === 2 && turn === player2) {
+            return true;
+        } else {
+            return false;
+        };
+    });
+    return result;
+};
 
 $(document).ready(function() {
     $("form#player2-piece").hide();
@@ -108,67 +162,230 @@ $(document).ready(function() {
     var player1 = new Player(null, null);
     var player2 = new Player(null, null);
     var game = new Game(null, null);
-
+    var totalTurns = 0;
 
     $("form#player1-piece").submit(function(event){
-        console.log("player 1 submitted");
         event.preventDefault();
-        console.log("default prevented");
-
         var player1Name = $("input#player1Name").val();
-        console.log(player1Name + "is player 1");
         var player1Character = $(".player1Character:selected").val();
-        console.log(player1Character + "is player1 character");
-        console.log(player1.name + " is player1.name");
         player1.name = player1Name;
-        console.log("player1.name changed to " + player1.name)
         player1.mark = player1Character;
-
         $("form#player1-piece").hide();
         $("form#player2-piece").show();
-
     });
-
-    console.log("after submit event, player1.name is " + player1.name);
 
     $("form#player2-piece").submit(function(event){
         event.preventDefault();
-        console.log("player 2 function triggered");
-
         var player2Name = $("input#player2Name").val();
-        var player2Character = $("input#player2Character").val();
+        var player2Character = $(".player2Character:selected").val();
         player2.name = player2Name;
         player2.mark = player2Character;
-
         $("form#player2-piece").hide();
         $("#click-to-play").show();
-
     });
 
     $("#click-to-play").click(function() {
         $("#click-to-play").hide();
         $("#gameDiv").show();
-        console.log("clicked to play");
         game.player1 = player1;
-        console.log("in click to play game is " + game);
-        console.log("in click to play game.player1 is " + game.player1);
         game.player2 = player2;
         game.turn = player1;
         $("#player1-turn").show();
         $("#player1-name").text(player1.name);
     });
 
-    $("#space11").click(function() {
-        console.log("space 1 1 clicked");
-        console.log("space 1 1 click event game is " + game);
+    $("#space11").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
         var player = game.turn;
-        console.log("space 11 click game is " + game);
-        console.log("space 11 click turn is " + game.turn);
-
-        console.log("space 11 click player is " + player);
         game.board.space11.markBy(player);
         $("#space11").append('<img src="img/' + player.mark + '">');
-        game.changeTurn();
+        if (game.winner()) {
+            console.log("game won")
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
     });
 
+    $("#space12").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space12.markBy(player);
+        $("#space12").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space13").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space13.markBy(player);
+        $("#space13").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space21").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space21.markBy(player);
+        $("#space21").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space22").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space22.markBy(player);
+        $("#space22").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space23").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space23.markBy(player);
+        $("#space23").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space31").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space31.markBy(player);
+        $("#space31").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space32").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space32.markBy(player);
+        $("#space32").append('<img src="img/' + player.mark + '">');
+        if (game.winner()) {
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
+
+    $("#space33").click(function(event) {
+        $(this).off(event);
+        totalTurns += 1;
+        var player = game.turn;
+        game.board.space33.markBy(player);
+        $("#space33").append('<img src="img/' + player.mark + '">');
+
+        if (game.winner()) {
+
+            if (confirm("Game over! " + player.name + " wins! Play a new game?")) {
+
+                window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+            };
+        } else {
+
+            if (game.checkTie(totalTurns)) {
+                if (confirm("Game ended in a draw! Play a new game?")) {
+
+                    window.location.reload(); // while testing be sure to click cancel on this prompt. If you click ok it will refresh the page and prompt you again.
+                };
+            } else {
+                game.changeTurn();
+            };
+        };
+    });
 });

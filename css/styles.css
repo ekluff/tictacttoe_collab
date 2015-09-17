@@ -91,3 +91,22 @@ img {
   width: 100%;
   height: 100%;
 }
+
+
+/*attempts to center the divs^^
+
+/*@media (min-width: 500px) and (max-width:800px) {
+    #gameDiv{
+        display:inline;
+    }
+
+}
+
+body{
+
+vertival-align:middle;
+}
+
+#gameDiv{
+    text-align:center;
+}*/
