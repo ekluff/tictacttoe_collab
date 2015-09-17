@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <title></title>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Metaphor for the Entire Internet - The Game</h1>
+
+      <div id="messages">
+        <div id="player1-turn">
+          <p><span id="player1-name"></span> make a move already.</p>
+        </div>
+        <div id="player2-turn">
+          <p><span id="player2-name"></span> make a move already.</p>
+        </div>
+      </div>
+
+      <form id="player1-piece" class="twelve columns">
+        <h4>Player 1</h4>
+        <div class="row">
+          <input type="text" id="player1Name" placeholder="Enter Your Name">
+        </div>
+        <div class="row">
+          <label for="player1Character">Choose a Character</label>
+          <select >
+            <option class="player1Character" value="ayeaye.jpg">Cute Lemur</option>
+            <option class="player1Character" value="boxer-dog.jpg">Adorable Puppy</option>
+            <option class="player1Character" value="llama.jpg">Kind Llama</option>
+          </select>
+        </div>
+        <div class="row">
+          <input class="button-primary" type="submit" value="Submit">
+        </div>
+      </form>
+
+      <form id="player2-piece" class="twelve columns">
+        <h4>Player 2</h4>
+        <div class="row">
+          <input type="text" id="player2Name" placeholder="Enter Your Name">
+        </div>
+        <div class="row">
+          <label for="player2Character">Choose a Character</label>
+          <select >
+            <option class="player2Character" value="llamafro.jpg">Kind Llama's Buddy</option>
+            <option class="player2Character" value="molerat.jpg">Small Fuzzy Creature</option>
+            <option class="player2Character" value="mostercat.jpg">Baby Kitten</option>
+          </select>
+        </div>
+        <div class="row">
+          <input class="button-primary" type="submit" value="Submit">
+        </div>
+      </form>
+
+      <div id="click-to-play">
+        <button class="button-primary" type="button" id="play-button">PLAY</button>
+      </div>
+
+      <div id="gameDiv">
+        <div class="row row-1">
+          <div id="space11" class="four columns">
+          </div>
+          <div id="space21" class="four columns">
+          </div>
+          <div id="space31" class="four columns">
+          </div>
+        </div>
+        <div class="row row-2">
+          <div id="space12" class="four columns">
+          </div>
+          <div id="space22" class="four columns">
+          </div>
+          <div id="space32" class="four columns">
+          </div>
+        </div>
+        <div class="row row-3">
+          <div id="space13" class="four columns">
+          </div>
+          <div id="space23" class="four columns">
+          </div>
+          <div id="space33" class="four columns">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

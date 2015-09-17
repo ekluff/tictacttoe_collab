@@ -1,0 +1,93 @@
+#space11 {
+  border-bottom: 3px solid #FF00FF;
+  border-right: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  cursor: pointer;
+}
+#space21 {
+  border-bottom: 3px solid #FF00FF;
+  border-right: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  margin-left: 0px;
+  cursor: pointer;
+
+}
+#space31 {
+  border-bottom: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  margin-left: 0px;
+  cursor: pointer;
+
+}
+#space12 {
+  border-bottom: 3px solid #FF00FF;
+  border-right: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  cursor: pointer;
+
+}
+#space22 {
+  border-bottom: 3px solid #FF00FF;
+  border-right: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  margin-left: 0px;
+  cursor: pointer;
+
+}
+#space32 {
+  border-bottom: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  margin-left: 0px;
+  cursor: pointer;
+
+}
+#space13 {
+  border-right: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  cursor: pointer;
+
+}
+#space23 {
+  border-right: 3px solid #FF00FF;
+  height: 200px;
+  width: 200px;
+  margin-left: 0px;
+  cursor: pointer;
+
+}
+#space33 {
+  height: 200px;
+  width: 200px;
+  margin-left: 0px;
+  cursor: pointer;
+
+}
+
+#game {
+  margin-left: 30%;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  text-align: center;
+}
+
+#click-to-play {
+  text-align: center;
+  margin-top: 20%;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+}
